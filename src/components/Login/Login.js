@@ -1,11 +1,14 @@
 import { Google, LockOutlined } from '@mui/icons-material';
 import { Avatar, Box, Button, Container, Divider, Grid, TextField, Typography } from '@mui/material';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserData } from '../../context/UserContext';
 import { toast } from 'react-hot-toast';
 
 const Login = () => {
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+
     const { signInUser, googleSignIn } = useContext(UserData)
     const location = useLocation()
     const from = location.state?.from?.pathname || '/'
@@ -18,6 +21,18 @@ const Login = () => {
         const email = form.email.value
         const password = form.password.value
         console.log(email, password)
+
+        if (!email) {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+        }
+
+        if (!password) {
+            setPasswordError(true);
+        } else {
+            setPasswordError(false);
+        }
 
         signInUser(email, password)
             .then((loginData) => {
@@ -32,18 +47,18 @@ const Login = () => {
             })
     }
 
-      const googleUser = () => {
-    googleSignIn()
-      .then((result) => {
-        const user = result.user
-        toast.success(`🚀 You're In! 🚀`)
-        navigate('/')
-        console.log(user)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
+    const googleUser = () => {
+        googleSignIn()
+            .then((result) => {
+                const user = result.user
+                toast.success(`🚀 You're In! 🚀`)
+                navigate('/')
+                console.log(user)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -54,7 +69,7 @@ const Login = () => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                <Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}>
                     <LockOutlined></LockOutlined>
                 </Avatar>
                 <Typography component="h1" variant="h5">
@@ -70,6 +85,8 @@ const Login = () => {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        error={emailError}
+                        helperText={emailError ? 'Email is required' : ''}
                     />
                     <TextField
                         margin="normal"
@@ -80,6 +97,8 @@ const Login = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        error={passwordError}
+                        helperText={passwordError ? 'Password is required' : ''}
                     />
                     <Button
                         type="submit"
@@ -109,7 +128,7 @@ const Login = () => {
                         color="success"
                         startIcon={<Google />}
                         onClick={googleUser}
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 6.5 }}
                     >
                         Sign in with Google
                     </Button>
