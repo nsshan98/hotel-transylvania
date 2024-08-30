@@ -3,7 +3,6 @@ import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 const style = {
@@ -18,38 +17,39 @@ const style = {
     p: 4,
 };
 
-const HotelDetailsModal = () => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+const HotelDetailsModal = ({ open, handleClose, hotel }) => {
     return (
-        <div>
-            <Button sx={{color:'white', padding:0}} onClick={handleOpen}>Details</Button>
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                slots={{ backdrop: Backdrop }}
-                slotProps={{
-                    backdrop: {
-                        timeout: 500,
-                    },
-                }}
-            >
-                <Fade in={open}>
-                    <Box sx={style}>
-                        <Typography id="transition-modal-title" variant="h6" component="h2">
-                            Text in a modal
-                        </Typography>
-                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                        </Typography>
-                    </Box>
-                </Fade>
-            </Modal>
-        </div>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            slots={{ backdrop: Backdrop }}
+            slotProps={{
+                backdrop: {
+                    timeout: 500,
+                },
+            }}
+        >
+            <Fade in={open}>
+                <Box sx={style}>
+                    <Typography id="modal-title" variant="h6" component="h2">
+                        {hotel.hotel_name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        Location: {hotel.city}, {hotel.country}, {hotel.continent_name}
+                    </Typography>
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                        Price: ${hotel.price} per night
+                    </Typography>
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                        Rating: {hotel.star_rating} / 5
+                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 2 }}>
+                        {hotel.description}
+                    </Typography>
+                </Box>
+            </Fade>
+        </Modal>
     );
 };
 
