@@ -40,6 +40,7 @@ const Login = () => {
                 form.reset()
                 console.log(user)
                 navigate(from, { replace: true })
+                toast.success(`🤗 Welcome Back! 🤗`)
 
             })
             .catch(error => {

@@ -41,10 +41,6 @@ function App() {
           element: <HotelDetails />,
           loader: () => fetch('../hoteldata.json')
         },
-        // {
-        //   path: '/checkout',
-        //   element: <Checkout />
-        // },
         {
           path: '/checkout/:hotelId',
           element: <PrivateRoute><Checkout/></PrivateRoute>,

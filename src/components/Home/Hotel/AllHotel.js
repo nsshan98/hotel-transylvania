@@ -74,9 +74,9 @@ const AllHotel = () => {
                                         {`Price: $${allHotel.price}`}
                                     </Typography>
                                     <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button variant='contained' color="primary">
+                                        {/* <Button variant='contained' color="primary">
                                             <HotelDetailsModal />
-                                        </Button>
+                                        </Button> */}
                                         <Link to={`/allhotel/${allHotel.hotel_id}`}>
                                             <Button variant='contained' color="primary">
                                                 Book Now

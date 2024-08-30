@@ -2,6 +2,7 @@ import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import React from 'react';
 import saintmartin from "../../../assets/images/saint-martin.jpg"
 import sundarban from "../../../assets/images/sundarban.jpg"
+import { Link } from 'react-router-dom';
 
 
 const BannerSection = () => {
@@ -16,13 +17,15 @@ const BannerSection = () => {
                 </Grid>
                 <Grid item md={6}>
                     <Container>
-                        <Typography variant='h3' sx={{ mt: 10, fontWeight:700 }}>
+                        <Typography variant='h3' sx={{ mt: 10, fontWeight: 700 }}>
                             Book Your Dream With Us!
                         </Typography>
                         <Typography variant='body1' sx={{ mt: 2 }}>
                             "Unlock the possibilities with just a few clicks. Whether you're planning a getaway or a special occasion, our platform is your gateway to seamless bookings and unforgettable experiences. Booking your next adventure has never been easier. Start your journey with us today—your dream destination is just a click away!"
                         </Typography>
-                        <Button variant="contained" sx={{mt:2}}>Get Started</Button>
+                        <Link to={'/allhotel'} >
+                            <Button variant="contained" sx={{ mt: 2 }}>Get Started</Button>
+                        </Link>
                     </Container>
                 </Grid>
             </Grid>
