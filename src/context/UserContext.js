@@ -49,7 +49,7 @@ import {
       const unsubscribe = onAuthStateChanged(auth, (loginUser) => {
         setUser(loginUser);
         setLoading(false)
-        console.log(loginUser);
+        // console.log(loginUser);
       });
       return () => {
         unsubscribe();

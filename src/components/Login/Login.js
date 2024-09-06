@@ -8,19 +8,19 @@ import { toast } from 'react-hot-toast';
 const Login = () => {
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [loginErrorMessage, setLoginErrorMessage] = useState(''); // For handling incorrect password message
 
-    const { signInUser, googleSignIn } = useContext(UserData)
-    const location = useLocation()
-    const from = location.state?.from?.pathname || '/'
-    const navigate = useNavigate()
-
+    const { signInUser, googleSignIn } = useContext(UserData);
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+    const navigate = useNavigate();
 
     const userLogin = event => {
-        event.preventDefault()
-        const form = event.target
-        const email = form.email.value
-        const password = form.password.value
-        console.log(email, password)
+        event.preventDefault();
+        const form = event.target;
+        const email = form.email.value;
+        const password = form.password.value;
+        // console.log(email, password);
 
         if (!email) {
             setEmailError(true);
@@ -36,30 +36,39 @@ const Login = () => {
 
         signInUser(email, password)
             .then((loginData) => {
-                const user = loginData.user
-                form.reset()
-                console.log(user)
-                navigate(from, { replace: true })
-                toast.success(`🤗 Welcome Back! 🤗`)
-
+                const user = loginData.user;
+                form.reset();
+                // console.log(user);
+                navigate(from, { replace: true });
+                toast.success(`🤗 Welcome Back! 🤗`);
+                setLoginErrorMessage(''); // Clear previous error message if successful
             })
             .catch(error => {
-                console.error(error)
-            })
-    }
+                if (error.code === 'auth/wrong-password') {
+                    setLoginErrorMessage('Password is incorrect');
+                    setPasswordError(true); // Set password error to highlight the field
+                } else if (error.code === 'auth/user-not-found') {
+                    setLoginErrorMessage('No user found with this email');
+                    setEmailError(true);
+                } else {
+                    setLoginErrorMessage('Login failed. Please try again.');
+                }
+                console.error(error);
+            });
+    };
 
     const googleUser = () => {
         googleSignIn()
             .then((result) => {
-                const user = result.user
-                toast.success(`🚀 You're In! 🚀`)
-                navigate('/')
-                console.log(user)
+                const user = result.user;
+                toast.success(`🚀 You're In! 🚀`);
+                navigate('/');
+                // console.log(user);
             })
             .catch(error => {
-                console.error(error)
-            })
-    }
+                console.error(error);
+            });
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -71,7 +80,7 @@ const Login = () => {
                 }}
             >
                 <Avatar sx={{ m: 2, bgcolor: 'secondary.main' }}>
-                    <LockOutlined></LockOutlined>
+                    <LockOutlined />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Login
@@ -98,8 +107,8 @@ const Login = () => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        error={passwordError}
-                        helperText={passwordError ? 'Password is required' : ''}
+                        error={passwordError || loginErrorMessage === 'Password is incorrect'}
+                        helperText={passwordError ? 'Password is required' : loginErrorMessage}
                     />
                     <Button
                         type="submit"

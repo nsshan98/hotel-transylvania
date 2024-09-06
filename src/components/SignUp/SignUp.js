@@ -22,7 +22,7 @@ const SignUp = () => {
     const name = form.name.value
     const email = form.email.value
     const password = form.password.value
-    console.log(name, email, password)
+    // console.log(name, email, password)
 
     if (!name) {
         setNameError(true);
@@ -45,7 +45,7 @@ const SignUp = () => {
     createUser(email, password)
       .then((registerData) => {
         const user = registerData.user
-        console.log(user)
+        // console.log(user)
         form.reset()
         userInfo(name)
         toast.success(`🚀 You're In! 🚀`)
