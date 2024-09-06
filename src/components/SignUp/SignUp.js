@@ -2,7 +2,7 @@ import { LockOutlined } from '@mui/icons-material';
 import { Avatar, Box, Button, Checkbox, Container, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserData } from '../../context/UserContext';
 
 const SignUp = () => {
@@ -12,84 +12,85 @@ const SignUp = () => {
     const [passwordError, setPasswordError] = useState(false);
 
     const { createUser, updateUserInfo, googleSignIn, facebookSignIn } = useContext(UserData)
-//   const [checked, setChecked] = useState(false)
+    //   const [checked, setChecked] = useState(false)
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
+    const navigate = useNavigate()
 
-  const navigate = useNavigate()
+    const userRegister = event => {
+        event.preventDefault()
+        const form = event.target
+        const name = form.name.value
+        const email = form.email.value
+        const password = form.password.value
+        // console.log(name, email, password)
 
-  const userRegister = event => {
-    event.preventDefault()
-    const form = event.target
-    const name = form.name.value
-    const email = form.email.value
-    const password = form.password.value
-    // console.log(name, email, password)
+        if (!name) {
+            setNameError(true);
+        } else {
+            setNameError(false);
+        }
 
-    if (!name) {
-        setNameError(true);
-    } else {
-        setNameError(false);
+        if (!email) {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+        }
+
+        if (!password) {
+            setPasswordError(true);
+        } else {
+            setPasswordError(false);
+        }
+
+        createUser(email, password)
+            .then((registerData) => {
+                const user = registerData.user
+                // console.log(user)
+                form.reset()
+                userInfo(name)
+                navigate(from, { replace: true })
+                toast.success(`🚀 You're In! 🚀`)
+            })
+            .catch(error => {
+                console.error(error)
+            })
     }
-    
-    if (!email) {
-        setEmailError(true);
-    } else {
-        setEmailError(false);
+
+    //   const googleUser = () => {
+    //     googleSignIn()
+    //       .then((result) => {
+    //         const user = result.user
+    //         toast.success(`🚀 You're In! 🚀`)
+    //         navigate('/')
+    //         console.log(user)
+    //       })
+    //       .catch(error => {
+    //         console.error(error)
+    //       })
+    //   }
+
+    //   const facebookUser = () => {
+    //     facebookSignIn()
+    //       .then((result) => {
+    //         const user = result.user
+    //         toast.success(`🚀 You're In! 🚀`)
+    //         navigate('/')
+    //         console.log(user)
+    //       })
+    //       .catch(error => {
+    //         console.error(error)
+    //       })
+    //   }
+
+    const userInfo = (name) => {
+        const profile = {
+            displayName: name
+        }
+        updateUserInfo(profile)
+            .then(() => { })
+            .catch(error => console.error(error))
     }
-
-    if (!password) {
-        setPasswordError(true);
-    } else {
-        setPasswordError(false);
-    }
-
-    createUser(email, password)
-      .then((registerData) => {
-        const user = registerData.user
-        // console.log(user)
-        form.reset()
-        userInfo(name)
-        toast.success(`🚀 You're In! 🚀`)
-        navigate('/')
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
-
-//   const googleUser = () => {
-//     googleSignIn()
-//       .then((result) => {
-//         const user = result.user
-//         toast.success(`🚀 You're In! 🚀`)
-//         navigate('/')
-//         console.log(user)
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//   }
-
-//   const facebookUser = () => {
-//     facebookSignIn()
-//       .then((result) => {
-//         const user = result.user
-//         toast.success(`🚀 You're In! 🚀`)
-//         navigate('/')
-//         console.log(user)
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//   }
-
-  const userInfo = (name) => {
-    const profile = {
-      displayName: name
-    }
-    updateUserInfo(profile)
-    .then(() => {})
-    .catch(error => console.error(error))
-  }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -151,7 +152,7 @@ const SignUp = () => {
                     >
                         Sign Up
                     </Button>
-                    <Grid container sx={{mb:6.5}}>
+                    <Grid container sx={{ mb: 6.5 }}>
                         <Grid item xs>
                             <Link to="#" variant="body2">
                                 Forgot password?

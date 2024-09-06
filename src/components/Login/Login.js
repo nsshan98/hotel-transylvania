@@ -62,7 +62,7 @@ const Login = () => {
             .then((result) => {
                 const user = result.user;
                 toast.success(`🚀 You're In! 🚀`);
-                navigate('/');
+                navigate(from, { replace: true });
                 // console.log(user);
             })
             .catch(error => {
